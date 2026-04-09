@@ -1,12 +1,12 @@
 # Prompt Injection Prevention Skill
 
-A defence framework for LLM-based agents inspired by the **CaMeL** (_CApability-based Machine Learning_) paper. It protects agent systems against prompt injection attacks by enforcing strict data-control separation, taint tracking, capability-based security, and policy-driven decision making.
+A defense framework for LLM-based agents inspired by the **CaMeL** (_CApability-based Machine Learning_) paper. It protects agent systems against prompt injection attacks by enforcing strict data-control separation, taint tracking, capability-based security, and policy-driven decision making.
 
 ## Background: The CaMeL Approach
 
 Prompt injection is the most critical security threat to LLM-based agents. When an agent reads untrusted content (web pages, files, tool outputs), that content can contain adversarial instructions that trick the agent into performing unintended actions — sending emails, executing code, or exfiltrating data.
 
-The [CaMeL paper](https://arxiv.org/abs/2503.18813) proposes a principled defence based on ideas from systems security:
+The [CaMeL paper](https://arxiv.org/abs/2503.18813) proposes a principled defense based on ideas from systems security:
 
 | CaMeL Principle | This Implementation |
 |---|---|
@@ -64,7 +64,7 @@ from prompt_injection_prevention import (
     TaintLabel,
 )
 
-# 1. Create the defence layer
+# 1. Create the defense layer
 defense = CamelDefense()
 
 # 2. Grant only the capabilities the agent needs

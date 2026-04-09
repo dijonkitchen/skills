@@ -3,7 +3,7 @@ CaMeL Defense Coordinator
 
 Top-level façade that ties together the taint tracker, capability
 manager, input sanitizer, policy engine, and dual-LLM orchestrator
-into a single, easy-to-use defence layer for agent applications.
+into a single, easy-to-use defense layer for agent applications.
 
 Usage::
 
@@ -61,7 +61,7 @@ from prompt_injection_prevention.taint_tracker import (
 
 @dataclass
 class DefenseResult:
-    """Aggregated result from the full defence pipeline."""
+    """Aggregated result from the full defense pipeline."""
 
     decision: PolicyDecision
     action_name: str
@@ -85,7 +85,7 @@ class DefenseResult:
 
 
 class CamelDefense:
-    """One-stop defence layer for LLM-based agents.
+    """One-stop defense layer for LLM-based agents.
 
     Composes the following sub-systems:
 
@@ -162,7 +162,7 @@ class CamelDefense:
         inputs: dict[str, Any] | None = None,
         input_taint: TaintLabel = TaintLabel.NONE,
     ) -> DefenseResult:
-        """Run the full CaMeL-inspired defence pipeline.
+        """Run the full CaMeL-inspired defense pipeline.
 
         Steps:
         1. Check that the required capability is held.

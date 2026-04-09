@@ -6,7 +6,7 @@ A collection of agent skills for building safer, more capable AI systems.
 
 ### [Prompt Injection Prevention](./prompt-injection-prevention/)
 
-A defence framework for LLM-based agents inspired by the **CaMeL** (_CApability-based Machine Learning_) paper. Protects against prompt injection attacks through:
+A defense framework for LLM-based agents inspired by the **CaMeL** (_CApability-based Machine Learning_) paper. Protects against prompt injection attacks through:
 
 - **Taint tracking** — labels data provenance and prevents untrusted content from influencing control flow
 - **Capability-based security** — gates every tool invocation behind fine-grained, revocable permissions

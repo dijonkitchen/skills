@@ -1,7 +1,7 @@
 """
 Policy Engine
 
-The policy engine sits at the heart of the CaMeL-inspired defence. It
+The policy engine sits at the heart of the CaMeL-inspired defense. It
 evaluates every proposed agent *action* against a configurable set of
 *rules* that consider:
 
