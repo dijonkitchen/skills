@@ -1,18 +1,10 @@
 ---
-name: Prompt Injection Prevention
+name: prompt-injection-prevention
 description: >
   Defend LLM-based agents against prompt injection attacks using
   CaMeL-inspired data-control separation, taint tracking,
   capability-based security, and policy enforcement.
-version: 0.1.0
-author: JC (Jonathan Chen)
-license: MIT
-tags:
-  - security
-  - prompt-injection
-  - llm-safety
-  - camel
-  - agent-defense
+user-invocable: true
 ---
 
 # Prompt Injection Prevention
