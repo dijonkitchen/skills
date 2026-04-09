@@ -1,5 +1,7 @@
 """Tests for DualLLMOrchestrator."""
 
+import unittest
+
 from prompt_injection_prevention.dual_llm import DualLLMOrchestrator, LLMRole
 from prompt_injection_prevention.taint_tracker import TaintLabel, TaintTracker
 
@@ -12,7 +14,7 @@ def _echo_llm(messages, **kwargs):
     return "No user message"
 
 
-class TestDualLLMOrchestrator:
+class TestDualLLMOrchestrator(unittest.TestCase):
     def test_privileged_returns_trusted_data(self):
         tracker = TaintTracker()
         orch = DualLLMOrchestrator(
@@ -20,8 +22,8 @@ class TestDualLLMOrchestrator:
             taint_tracker=tracker,
         )
         result = orch.process_privileged("Hello")
-        assert result.is_trusted
-        assert "Echo" in str(result.value)
+        self.assertTrue(result.is_trusted)
+        self.assertIn("Echo", str(result.value))
 
     def test_quarantined_returns_tainted_data(self):
         tracker = TaintTracker()
@@ -33,9 +35,9 @@ class TestDualLLMOrchestrator:
             "Some tool output",
             source_label=TaintLabel.TOOL_OUTPUT,
         )
-        assert result.is_tainted
-        assert TaintLabel.TOOL_OUTPUT in result.labels
-        assert TaintLabel.LLM_GENERATED in result.labels
+        self.assertTrue(result.is_tainted)
+        self.assertIn(TaintLabel.TOOL_OUTPUT, result.labels)
+        self.assertIn(TaintLabel.LLM_GENERATED, result.labels)
 
     def test_separate_histories(self):
         orch = DualLLMOrchestrator(privileged_llm=_echo_llm)
@@ -43,9 +45,8 @@ class TestDualLLMOrchestrator:
         orch.process_quarantined("Untrusted data")
         priv = orch.get_privileged_history()
         quar = orch.get_quarantined_history()
-        # Privileged: system (none in this case) + user + assistant
-        assert len(priv) == 2  # user + assistant
-        assert len(quar) == 2  # user + assistant
+        self.assertEqual(len(priv), 2)  # user + assistant
+        self.assertEqual(len(quar), 2)  # user + assistant
 
     def test_system_prompt_in_privileged(self):
         orch = DualLLMOrchestrator(
@@ -53,21 +54,21 @@ class TestDualLLMOrchestrator:
             system_prompt="You are a helpful assistant.",
         )
         history = orch.get_privileged_history()
-        assert len(history) == 1
-        assert history[0].role == "system"
+        self.assertEqual(len(history), 1)
+        self.assertEqual(history[0].role, "system")
 
     def test_clear_quarantined_history(self):
         orch = DualLLMOrchestrator(privileged_llm=_echo_llm)
         orch.process_quarantined("data")
         orch.clear_quarantined_history()
-        assert len(orch.get_quarantined_history()) == 0
+        self.assertEqual(len(orch.get_quarantined_history()), 0)
 
     def test_inject_trusted_summary(self):
         orch = DualLLMOrchestrator(privileged_llm=_echo_llm)
         orch.inject_trusted_summary("The file contains sales data for Q1")
         history = orch.get_privileged_history()
-        assert len(history) == 1
-        assert "[Verified summary]" in history[0].content
+        self.assertEqual(len(history), 1)
+        self.assertIn("[Verified summary]", history[0].content)
 
     def test_custom_extraction_prompt(self):
         def capture_llm(messages, **kwargs):
@@ -81,4 +82,8 @@ class TestDualLLMOrchestrator:
             "raw data",
             extraction_prompt="Extract numbers from: raw data",
         )
-        assert "Extract numbers" in str(result.value)
+        self.assertIn("Extract numbers", str(result.value))
+
+
+if __name__ == "__main__":
+    unittest.main()

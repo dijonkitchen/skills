@@ -16,8 +16,8 @@ A defense framework for LLM-based agents inspired by the **CaMeL** (_CApability-
 
 ```bash
 cd prompt-injection-prevention
-pip install -e ".[dev]"
-pytest tests/ -v
+uv sync
+uv run python -m unittest discover -s tests -v
 ```
 
 ## License

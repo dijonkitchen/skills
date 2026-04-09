@@ -1,5 +1,7 @@
 """Tests for PolicyEngine."""
 
+import unittest
+
 from prompt_injection_prevention.capability_manager import Capability
 from prompt_injection_prevention.input_sanitizer import ThreatLevel
 from prompt_injection_prevention.policy_engine import (
@@ -11,7 +13,7 @@ from prompt_injection_prevention.policy_engine import (
 from prompt_injection_prevention.taint_tracker import TaintLabel
 
 
-class TestPolicyEngine:
+class TestPolicyEngine(unittest.TestCase):
     def test_default_deny(self):
         engine = PolicyEngine(default_decision=PolicyDecision.DENY)
         action = Action(
@@ -19,7 +21,7 @@ class TestPolicyEngine:
             capability=Capability.FILE_READ,
         )
         result = engine.evaluate(action)
-        assert result.decision == PolicyDecision.DENY
+        self.assertEqual(result.decision, PolicyDecision.DENY)
 
     def test_default_rules_block_critical(self):
         engine = PolicyEngine()
@@ -30,7 +32,7 @@ class TestPolicyEngine:
             threat_level=ThreatLevel.CRITICAL,
         )
         result = engine.evaluate(action)
-        assert result.decision == PolicyDecision.DENY
+        self.assertEqual(result.decision, PolicyDecision.DENY)
 
     def test_default_rules_quarantine_high(self):
         engine = PolicyEngine()
@@ -41,7 +43,7 @@ class TestPolicyEngine:
             threat_level=ThreatLevel.HIGH,
         )
         result = engine.evaluate(action)
-        assert result.decision == PolicyDecision.QUARANTINE
+        self.assertEqual(result.decision, PolicyDecision.QUARANTINE)
 
     def test_default_rules_allow_trusted(self):
         engine = PolicyEngine()
@@ -53,7 +55,7 @@ class TestPolicyEngine:
             threat_level=ThreatLevel.NONE,
         )
         result = engine.evaluate(action)
-        assert result.decision == PolicyDecision.ALLOW
+        self.assertEqual(result.decision, PolicyDecision.ALLOW)
 
     def test_default_rules_block_tainted_code_exec(self):
         engine = PolicyEngine()
@@ -65,7 +67,7 @@ class TestPolicyEngine:
             threat_level=ThreatLevel.NONE,
         )
         result = engine.evaluate(action)
-        assert result.decision == PolicyDecision.DENY
+        self.assertEqual(result.decision, PolicyDecision.DENY)
 
     def test_default_rules_block_tainted_write(self):
         engine = PolicyEngine()
@@ -77,7 +79,7 @@ class TestPolicyEngine:
             threat_level=ThreatLevel.NONE,
         )
         result = engine.evaluate(action)
-        assert result.decision == PolicyDecision.DENY
+        self.assertEqual(result.decision, PolicyDecision.DENY)
 
     def test_default_rules_quarantine_tainted_email(self):
         engine = PolicyEngine()
@@ -89,7 +91,7 @@ class TestPolicyEngine:
             threat_level=ThreatLevel.NONE,
         )
         result = engine.evaluate(action)
-        assert result.decision == PolicyDecision.QUARANTINE
+        self.assertEqual(result.decision, PolicyDecision.QUARANTINE)
 
     def test_custom_rule(self):
         engine = PolicyEngine()
@@ -104,7 +106,7 @@ class TestPolicyEngine:
         )
         action = Action(name="anything", capability=Capability.SHELL_EXECUTE)
         result = engine.evaluate(action)
-        assert result.decision == PolicyDecision.ALLOW
+        self.assertEqual(result.decision, PolicyDecision.ALLOW)
 
     def test_priority_ordering(self):
         engine = PolicyEngine()
@@ -124,14 +126,18 @@ class TestPolicyEngine:
         )
         action = Action(name="test", capability=Capability.FILE_READ)
         result = engine.evaluate(action)
-        assert result.decision == PolicyDecision.DENY
-        assert result.matching_rule is not None
-        assert result.matching_rule.name == "high_priority_deny"
+        self.assertEqual(result.decision, PolicyDecision.DENY)
+        self.assertIsNotNone(result.matching_rule)
+        self.assertEqual(result.matching_rule.name, "high_priority_deny")
 
     def test_remove_rule(self):
         engine = PolicyEngine()
         engine.add_rule(
             PolicyRule(name="my_rule", priority=0, decision=PolicyDecision.ALLOW)
         )
-        assert engine.remove_rule("my_rule")
-        assert not engine.remove_rule("nonexistent")
+        self.assertTrue(engine.remove_rule("my_rule"))
+        self.assertFalse(engine.remove_rule("nonexistent"))
+
+
+if __name__ == "__main__":
+    unittest.main()

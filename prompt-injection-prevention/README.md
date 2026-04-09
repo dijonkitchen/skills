@@ -51,7 +51,7 @@ The [CaMeL paper](https://arxiv.org/abs/2503.18813) proposes a principled defens
 ## Installation
 
 ```bash
-pip install -e ".[dev]"    # editable install with dev dependencies
+uv sync
 ```
 
 ## Quick Start
@@ -155,7 +155,7 @@ Top-level façade that composes all components into a single evaluation pipeline
 ## Running Tests
 
 ```bash
-pytest tests/ -v
+uv run python -m unittest discover -s tests -v
 ```
 
 ## References
