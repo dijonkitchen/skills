@@ -21,6 +21,9 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 
+[dependency-groups]
+dev = ["ruff>=0.4", "ty>=0.0.1a1"]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
