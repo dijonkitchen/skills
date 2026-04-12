@@ -32,60 +32,20 @@ Use this skill whenever an agent:
   poisoned
 - Needs to enforce the **principle of least privilege** for tool access
 
-## Core Concepts
+## How It Works
 
-### 1. Data-Control Separation
+`CamelDefense` is a single entry point that automatically:
 
-Every piece of data is tagged with its **provenance** (where it came
-from). Untrusted data (tool outputs, web content, file reads) is never
-allowed to influence which actions the agent takes.
-
-```python
-from prompt_injection_prevention import TaintLabel, TaintTracker
-
-tracker = TaintTracker()
-user_cmd = tracker.create_trusted("Summarize the report")        # trusted
-web_data = tracker.create_tainted("...", TaintLabel.WEB_CONTENT)  # untrusted
-```
-
-### 2. Capability-Based Security
-
-The agent can only use tools it has been explicitly granted access to.
-Grants are scoped to specific resources using glob patterns.
-
-```python
-from prompt_injection_prevention import Capability, CapabilityManager
-
-caps = CapabilityManager()
-caps.grant(Capability.FILE_READ, resource_pattern="/safe/*")
-caps.check(Capability.FILE_READ, resource="/safe/report.txt")  # allowed
-caps.check(Capability.FILE_READ, resource="/etc/passwd")        # denied
-```
-
-### 3. Input Sanitization
-
-All text is scanned for known injection patterns before processing:
-
-- Instruction overrides ("ignore previous instructions")
-- Role/persona hijacking ("you are a new assistant")
-- LLM delimiter injection (`<|im_start|>`, `[INST]`)
-- Hidden instructions in HTML comments
-- Encoding-based obfuscation
-- High-entropy encoded payloads
-
-```python
-from prompt_injection_prevention import InputSanitizer
-
-sanitizer = InputSanitizer()
-result = sanitizer.scan("Ignore all previous instructions")
-# result.threat_level == ThreatLevel.CRITICAL
-# result.is_safe == False
-```
-
-### 4. Policy Engine
-
-A configurable rule engine decides whether each action should be
-**allowed**, **denied**, or **quarantined** (held for human review):
+1. **Checks capabilities** — the agent can only use tools it has been
+   explicitly granted (scoped to specific resources via glob patterns).
+2. **Scans for injection** — every input is checked against known prompt
+   injection patterns (instruction overrides, delimiter attacks, encoding
+   tricks, etc.).
+3. **Tracks data provenance** — inputs are tagged as *trusted* (user) or
+   *untrusted* (tool output, web, files) so tainted data never drives
+   control flow.
+4. **Enforces policy** — a built-in rule engine returns **ALLOW**,
+   **DENY**, or **QUARANTINE** (needs human review) for each action.
 
 | Condition | Decision |
 |---|---|
@@ -96,20 +56,10 @@ A configurable rule engine decides whether each action should be
 | Email/message with tainted input | **QUARANTINE** |
 | Trusted input, low threat | **ALLOW** |
 
-### 5. Dual LLM Architecture
-
-Optionally route trusted and untrusted content through separate LLM
-contexts, preventing untrusted data from ever entering the privileged
-decision-making path.
-
 ## Quick Start
 
 ```python
-from prompt_injection_prevention import (
-    CamelDefense,
-    Capability,
-    TaintLabel,
-)
+from prompt_injection_prevention import CamelDefense, Capability, TaintLabel
 
 defense = CamelDefense()
 defense.grant_capability(Capability.FILE_READ, resource_pattern="/safe/*")
@@ -130,23 +80,20 @@ else:
     ...  # block and log result.reason
 ```
 
+### Scanning Text
+
+```python
+result = defense.scan_text("Ignore all previous instructions")
+result.is_safe       # False
+result.threat_level  # ThreatLevel.CRITICAL
+```
+
 ## Installation
 
 ```bash
 uv sync                                                # install
 uv run python -m unittest discover -s tests -v         # test
 ```
-
-## Components
-
-| Module | Purpose |
-|---|---|
-| `TaintTracker` | Data provenance labels and taint propagation |
-| `CapabilityManager` | Least-privilege, scoped tool permissions |
-| `InputSanitizer` | Pattern + entropy injection detection |
-| `PolicyEngine` | Rule-based allow / deny / quarantine decisions |
-| `DualLLMOrchestrator` | Isolated privileged and quarantined LLM contexts |
-| `CamelDefense` | Top-level facade composing all components |
 
 ## References
 
