@@ -1,63 +1,49 @@
 """
 Prompt Injection Prevention Skill
 
-A defense framework for LLM-based agents inspired by the CaMeL
-(CApability-based Machine Learning) paper. Implements data-control
-separation, taint tracking, capability-based security, and policy
-enforcement to protect against prompt injection attacks.
+Protect LLM-based agents against prompt injection attacks using a single
+entry point — :class:`CamelDefense`.
 
-Key concepts from CaMeL:
-- **Data-Control Separation**: Distinguishes trusted instructions (user)
-  from untrusted data (tools, web, files).
-- **Taint Tracking**: Tracks data provenance so untrusted content cannot
-  influence control-flow decisions.
-- **Capability-Based Security**: Each tool/action requires an explicit
-  capability grant before execution.
-- **Policy Enforcement**: Configurable policies define what actions are
-  permitted given the taint status of their inputs.
-- **Dual LLM Architecture**: Optionally routes trusted and untrusted
-  content through separate processing paths.
+``CamelDefense`` composes taint tracking, capability-based security,
+input sanitization, policy enforcement, and an optional dual-LLM
+architecture into one simple API.
+
+Quick start::
+
+    from prompt_injection_prevention import CamelDefense, Capability, TaintLabel
+
+    defense = CamelDefense()
+    defense.grant_capability(Capability.FILE_READ, resource_pattern="/safe/*")
+
+    result = defense.evaluate_action(
+        action_name="read_file",
+        capability=Capability.FILE_READ,
+        resource="/safe/report.txt",
+        inputs={"query": user_query},
+        input_taint=TaintLabel.USER_INPUT,
+    )
+
+    if result.is_allowed:
+        ...  # proceed
+
+Advanced types (``PolicyEngine``, ``PolicyRule``, ``InputSanitizer``,
+``TaintTracker``, etc.) are still accessible via their sub-modules::
+
+    from prompt_injection_prevention.policy_engine import PolicyRule
 """
 
-from prompt_injection_prevention.taint_tracker import (
-    TaintedData,
-    TaintLabel,
-    TaintTracker,
-)
-from prompt_injection_prevention.capability_manager import (
-    Capability,
-    CapabilityManager,
-)
-from prompt_injection_prevention.input_sanitizer import (
-    InputSanitizer,
-    SanitizationResult,
-    ThreatLevel,
-)
-from prompt_injection_prevention.policy_engine import (
-    Action,
-    PolicyDecision,
-    PolicyEngine,
-    PolicyRule,
-)
-from prompt_injection_prevention.dual_llm import DualLLMOrchestrator, LLMRole
+from prompt_injection_prevention.capability_manager import Capability
+from prompt_injection_prevention.input_sanitizer import ThreatLevel
+from prompt_injection_prevention.policy_engine import PolicyDecision
+from prompt_injection_prevention.taint_tracker import TaintLabel
 from prompt_injection_prevention.camel_defense import CamelDefense, DefenseResult
 
 __all__ = [
-    "Action",
     "CamelDefense",
     "Capability",
-    "CapabilityManager",
     "DefenseResult",
-    "DualLLMOrchestrator",
-    "InputSanitizer",
-    "LLMRole",
     "PolicyDecision",
-    "PolicyEngine",
-    "PolicyRule",
-    "SanitizationResult",
-    "TaintedData",
     "TaintLabel",
-    "TaintTracker",
     "ThreatLevel",
 ]
 
