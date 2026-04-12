@@ -22,7 +22,7 @@ classifiers = [
 ]
 
 [dependency-groups]
-dev = ["ruff>=0.4", "mypy>=1.10"]
+dev = ["ruff>=0.4", "ty>=0.0.1a1"]
 
 [build-system]
 requires = ["hatchling"]
