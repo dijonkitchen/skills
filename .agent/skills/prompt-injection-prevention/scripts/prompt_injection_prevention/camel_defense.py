@@ -44,7 +44,6 @@ from prompt_injection_prevention.dual_llm import (
 from prompt_injection_prevention.input_sanitizer import (
     InputSanitizer,
     SanitizationResult,
-    ThreatLevel,
 )
 from prompt_injection_prevention.policy_engine import (
     Action,

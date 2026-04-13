@@ -2,7 +2,7 @@
 
 import unittest
 
-from prompt_injection_prevention.dual_llm import DualLLMOrchestrator, LLMRole
+from prompt_injection_prevention.dual_llm import DualLLMOrchestrator
 from prompt_injection_prevention.taint_tracker import TaintLabel, TaintTracker
 
 

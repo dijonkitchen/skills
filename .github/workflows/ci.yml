@@ -38,4 +38,4 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: uv sync
-      - run: uv run python -m unittest discover -v
+      - run: uv run python -m unittest discover -v -s scripts/tests -p "test_*.py"

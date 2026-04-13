@@ -2,10 +2,9 @@
 
 import unittest
 
-from prompt_injection_prevention.camel_defense import CamelDefense, DefenseResult
+from prompt_injection_prevention.camel_defense import CamelDefense
 from prompt_injection_prevention.capability_manager import Capability
 from prompt_injection_prevention.input_sanitizer import ThreatLevel
-from prompt_injection_prevention.policy_engine import PolicyDecision
 from prompt_injection_prevention.taint_tracker import TaintLabel
 
 
