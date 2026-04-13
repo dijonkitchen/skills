@@ -42,7 +42,7 @@ class CapabilityGrant:
     """A concrete grant of a capability, optionally scoped."""
 
     capability: Capability
-    resource_pattern: str = "*"       # fnmatch pattern for resources
+    resource_pattern: str = "*"  # fnmatch pattern for resources
     constraints: dict[str, Any] = field(default_factory=dict)
     reason: str = ""
 
@@ -119,8 +119,7 @@ class CapabilityManager:
             g
             for g in self._grants
             if not (
-                g.capability == capability
-                and g.resource_pattern == resource_pattern
+                g.capability == capability and g.resource_pattern == resource_pattern
             )
         ]
         return before - len(self._grants)

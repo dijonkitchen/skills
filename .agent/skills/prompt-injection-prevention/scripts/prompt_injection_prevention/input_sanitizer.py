@@ -250,6 +250,4 @@ class InputSanitizer:
             return 0.0
         counts = Counter(text)
         length = len(text)
-        return -sum(
-            (c / length) * math.log2(c / length) for c in counts.values()
-        )
+        return -sum((c / length) * math.log2(c / length) for c in counts.values())

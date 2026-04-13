@@ -127,8 +127,10 @@ class TestPolicyEngine(unittest.TestCase):
         action = Action(name="test", capability=Capability.FILE_READ)
         result = engine.evaluate(action)
         self.assertEqual(result.decision, PolicyDecision.DENY)
-        self.assertIsNotNone(result.matching_rule)
-        self.assertEqual(result.matching_rule.name, "high_priority_deny")
+        matching_rule = result.matching_rule
+        self.assertIsNotNone(matching_rule)
+        assert matching_rule is not None
+        self.assertEqual(matching_rule.name, "high_priority_deny")
 
     def test_remove_rule(self):
         engine = PolicyEngine()
