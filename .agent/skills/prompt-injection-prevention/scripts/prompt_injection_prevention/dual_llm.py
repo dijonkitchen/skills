@@ -25,7 +25,11 @@ import enum
 from dataclasses import dataclass, field
 from typing import Any, Callable
 
-from prompt_injection_prevention.taint_tracker import TaintLabel, TaintTracker, TaintedData
+from prompt_injection_prevention.taint_tracker import (
+    TaintLabel,
+    TaintTracker,
+    TaintedData,
+)
 
 
 class LLMRole(enum.Enum):
@@ -111,8 +115,7 @@ class DualLLMOrchestrator:
         self._privileged_history.append(msg)
 
         messages = [
-            {"role": m.role, "content": m.content}
-            for m in self._privileged_history
+            {"role": m.role, "content": m.content} for m in self._privileged_history
         ]
         response_text = self._privileged_llm(messages, **llm_kwargs)
 
@@ -157,8 +160,7 @@ class DualLLMOrchestrator:
         self._quarantined_history.append(msg)
 
         messages = [
-            {"role": m.role, "content": m.content}
-            for m in self._quarantined_history
+            {"role": m.role, "content": m.content} for m in self._quarantined_history
         ]
         response_text = self._quarantined_llm(messages, **llm_kwargs)
 

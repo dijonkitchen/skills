@@ -23,8 +23,12 @@ class TestCapabilityManager(unittest.TestCase):
     def test_scoped_grant(self):
         mgr = CapabilityManager()
         mgr.grant(Capability.FILE_READ, resource_pattern="/safe/*")
-        self.assertTrue(mgr.check(Capability.FILE_READ, resource="/safe/data.txt").allowed)
-        self.assertFalse(mgr.check(Capability.FILE_READ, resource="/etc/passwd").allowed)
+        self.assertTrue(
+            mgr.check(Capability.FILE_READ, resource="/safe/data.txt").allowed
+        )
+        self.assertFalse(
+            mgr.check(Capability.FILE_READ, resource="/etc/passwd").allowed
+        )
 
     def test_revoke(self):
         mgr = CapabilityManager()
@@ -72,7 +76,9 @@ class TestCapabilityManager(unittest.TestCase):
         mgr.grant(Capability.FILE_READ, resource_pattern="/tmp/*")
         self.assertTrue(mgr.check(Capability.FILE_READ, resource="/safe/a.txt").allowed)
         self.assertTrue(mgr.check(Capability.FILE_READ, resource="/tmp/b.txt").allowed)
-        self.assertFalse(mgr.check(Capability.FILE_READ, resource="/etc/passwd").allowed)
+        self.assertFalse(
+            mgr.check(Capability.FILE_READ, resource="/etc/passwd").allowed
+        )
 
 
 if __name__ == "__main__":

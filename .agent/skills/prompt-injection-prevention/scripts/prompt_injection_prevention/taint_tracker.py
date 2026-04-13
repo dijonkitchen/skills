@@ -29,14 +29,14 @@ class TaintLabel(enum.Flag):
     """Provenance categories for data flowing through an agent."""
 
     NONE = 0
-    USER_INPUT = enum.auto()       # Direct user instruction (trusted)
-    TOOL_OUTPUT = enum.auto()      # Returned by a tool invocation
-    WEB_CONTENT = enum.auto()      # Fetched from the internet
-    FILE_CONTENT = enum.auto()     # Read from the filesystem
+    USER_INPUT = enum.auto()  # Direct user instruction (trusted)
+    TOOL_OUTPUT = enum.auto()  # Returned by a tool invocation
+    WEB_CONTENT = enum.auto()  # Fetched from the internet
+    FILE_CONTENT = enum.auto()  # Read from the filesystem
     DATABASE_RESULT = enum.auto()  # Returned by a database query
-    LLM_GENERATED = enum.auto()    # Produced by an LLM call
-    EXTERNAL_API = enum.auto()     # Received from a third-party API
-    UNKNOWN = enum.auto()          # Origin is unknown
+    LLM_GENERATED = enum.auto()  # Produced by an LLM call
+    EXTERNAL_API = enum.auto()  # Received from a third-party API
+    UNKNOWN = enum.auto()  # Origin is unknown
 
     @property
     def is_trusted(self) -> bool:

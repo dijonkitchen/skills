@@ -4,7 +4,7 @@ A collection of agent skills for building safer, more capable AI systems.
 
 ## Available Skills
 
-### [Prompt Injection Prevention](./prompt-injection-prevention/)
+### [Prompt Injection Prevention](./.agent/skills/prompt-injection-prevention/)
 
 A defense framework for LLM-based agents inspired by the **CaMeL** (_CApability-based Machine Learning_) paper. Protects against prompt injection attacks through:
 
@@ -15,9 +15,9 @@ A defense framework for LLM-based agents inspired by the **CaMeL** (_CApability-
 - **Dual LLM architecture** — isolates trusted and untrusted content into separate processing contexts
 
 ```bash
-cd prompt-injection-prevention
+cd .agent/skills/prompt-injection-prevention
 uv sync
-uv run python -m unittest discover -s tests -v
+uv run python -m unittest discover -s scripts/tests -v
 ```
 
 ## License

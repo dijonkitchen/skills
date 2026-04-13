@@ -4,7 +4,10 @@ description: >
   Defend LLM-based agents against prompt injection attacks using
   CaMeL-inspired data-control separation, taint tracking,
   capability-based security, and policy enforcement.
-user-invocable: true
+license: MIT
+metadata:
+  author: "JC (Jonathan Chen)"
+  version: "0.1.0"
 ---
 
 # Prompt Injection Prevention
@@ -92,7 +95,7 @@ result.threat_level  # ThreatLevel.CRITICAL
 
 ```bash
 uv sync                                                # install
-uv run python -m unittest discover -s tests -v         # test
+uv run python -m unittest discover -s scripts/tests -v # test
 ```
 
 ## References

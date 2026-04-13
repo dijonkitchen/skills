@@ -44,7 +44,6 @@ from prompt_injection_prevention.dual_llm import (
 from prompt_injection_prevention.input_sanitizer import (
     InputSanitizer,
     SanitizationResult,
-    ThreatLevel,
 )
 from prompt_injection_prevention.policy_engine import (
     Action,
@@ -192,10 +191,12 @@ class CamelDefense:
             )
 
         # 2. Input sanitization – combine all string inputs
-        combined_text = " ".join(
-            str(v) for v in inputs.values() if isinstance(v, str)
+        combined_text = " ".join(str(v) for v in inputs.values() if isinstance(v, str))
+        scan_result = (
+            self.sanitizer.scan(combined_text)
+            if combined_text
+            else SanitizationResult(original_text="")
         )
-        scan_result = self.sanitizer.scan(combined_text) if combined_text else SanitizationResult(original_text="")
 
         # 3. Taint registration
         tainted_inputs: list[TaintedData] = []
@@ -204,7 +205,9 @@ class CamelDefense:
                 td = self.tracker.create_trusted(value, description=key)
             else:
                 td = self.tracker.create_tainted(
-                    value, label=input_taint, description=key,
+                    value,
+                    label=input_taint,
+                    description=key,
                 )
             tainted_inputs.append(td)
 
@@ -244,7 +247,9 @@ class CamelDefense:
     def process_trusted(self, message: str, **kw: Any) -> TaintedData:
         """Process a trusted user message through the privileged LLM."""
         if self.orchestrator is None:
-            raise RuntimeError("No LLMs configured – pass privileged_llm to CamelDefense()")
+            raise RuntimeError(
+                "No LLMs configured – pass privileged_llm to CamelDefense()"
+            )
         return self.orchestrator.process_privileged(message, **kw)
 
     def process_untrusted(
@@ -256,7 +261,11 @@ class CamelDefense:
     ) -> TaintedData:
         """Process untrusted content through the quarantined LLM."""
         if self.orchestrator is None:
-            raise RuntimeError("No LLMs configured – pass privileged_llm to CamelDefense()")
+            raise RuntimeError(
+                "No LLMs configured – pass privileged_llm to CamelDefense()"
+            )
         return self.orchestrator.process_quarantined(
-            content, source_label=source_label, **kw,
+            content,
+            source_label=source_label,
+            **kw,
         )

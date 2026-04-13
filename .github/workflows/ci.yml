@@ -14,14 +14,14 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: prompt-injection-prevention
+        working-directory: .agent/skills/prompt-injection-prevention
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
       - run: uv sync --dev
       - run: uv run ruff check .
       - run: uv run ruff format --check .
-      - run: uv run ty check src/
+      - run: uv run ty check scripts/
 
   test:
     runs-on: ubuntu-latest
@@ -31,11 +31,11 @@ jobs:
         python-version: ["3.10", "3.11", "3.12"]
     defaults:
       run:
-        working-directory: prompt-injection-prevention
+        working-directory: .agent/skills/prompt-injection-prevention
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
         with:
           python-version: ${{ matrix.python-version }}
       - run: uv sync
-      - run: uv run python -m unittest discover -v
+      - run: uv run python -m unittest discover -v -s scripts/tests -p "test_*.py"

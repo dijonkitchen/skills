@@ -149,9 +149,7 @@ class PolicyEngine:
                     a.capability in (Capability.CODE_EXECUTE, Capability.SHELL_EXECUTE)
                     and a.input_taint.is_untrusted
                 ),
-                reason=(
-                    "Code/shell execution with tainted input is not allowed"
-                ),
+                reason=("Code/shell execution with tainted input is not allowed"),
             )
         )
         self.add_rule(
@@ -160,8 +158,7 @@ class PolicyEngine:
                 priority=30,
                 decision=PolicyDecision.DENY,
                 condition=lambda a: (
-                    a.capability
-                    in (Capability.FILE_WRITE, Capability.DATABASE_WRITE)
+                    a.capability in (Capability.FILE_WRITE, Capability.DATABASE_WRITE)
                     and a.input_taint.is_untrusted
                 ),
                 reason="Write operations with tainted input are not allowed",
@@ -173,13 +170,10 @@ class PolicyEngine:
                 priority=40,
                 decision=PolicyDecision.QUARANTINE,
                 condition=lambda a: (
-                    a.capability
-                    in (Capability.SEND_EMAIL, Capability.SEND_MESSAGE)
+                    a.capability in (Capability.SEND_EMAIL, Capability.SEND_MESSAGE)
                     and a.input_taint.is_untrusted
                 ),
-                reason=(
-                    "Communication with tainted input requires human review"
-                ),
+                reason=("Communication with tainted input requires human review"),
             )
         )
         self.add_rule(
@@ -188,8 +182,7 @@ class PolicyEngine:
                 priority=100,
                 decision=PolicyDecision.ALLOW,
                 condition=lambda a: (
-                    a.input_taint.is_trusted
-                    and a.threat_level <= ThreatLevel.LOW
+                    a.input_taint.is_trusted and a.threat_level <= ThreatLevel.LOW
                 ),
                 reason="Trusted input with no significant threat",
             )
