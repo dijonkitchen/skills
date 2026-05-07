@@ -1,0 +1,98 @@
+skill: prompt-injection-prevention
+date: 2026-05-07
+python: 3.11.15
+
+=== Tests ===
+Ran 70 tests in 0.005s
+Result: OK
+
+test_camel_defense (12)
+  test_allow_trusted_action_with_capability ... ok
+  test_defense_result_properties ... ok
+  test_deny_injection_in_input ... ok
+  test_deny_tainted_code_execution ... ok
+  test_deny_without_capability ... ok
+  test_dual_llm_integration ... ok
+  test_dual_llm_not_configured_raises ... ok
+  test_empty_inputs ... ok
+  test_quarantine_tainted_email ... ok
+  test_revoke_capability ... ok
+  test_scan_text_shortcut ... ok
+  test_scoped_capability_enforcement ... ok
+
+test_capability_manager (10)
+  test_check_without_grant_denies ... ok
+  test_grant_and_check ... ok
+  test_has_capability ... ok
+  test_list_grants ... ok
+  test_multiple_grants_same_capability_different_scope ... ok
+  test_require_raises_on_denial ... ok
+  test_require_succeeds_when_granted ... ok
+  test_revoke ... ok
+  test_revoke_all ... ok
+  test_scoped_grant ... ok
+
+test_dual_llm (7)
+  test_clear_quarantined_history ... ok
+  test_custom_extraction_prompt ... ok
+  test_inject_trusted_summary ... ok
+  test_privileged_returns_trusted_data ... ok
+  test_quarantined_returns_tainted_data ... ok
+  test_separate_histories ... ok
+  test_system_prompt_in_privileged ... ok
+
+test_input_sanitizer (14)
+  test_custom_pattern ... ok
+  test_empty_input ... ok
+  test_encoding_attack ... ok
+  test_hidden_html_comment ... ok
+  test_high_entropy_detection ... ok
+  test_instruction_override ... ok
+  test_multiple_patterns_highest_wins ... ok
+  test_prompt_leak_attempt ... ok
+  test_role_override ... ok
+  test_safe_input ... ok
+  test_social_engineering ... ok
+  test_system_delimiter_im_start ... ok
+  test_system_delimiter_inst ... ok
+  test_tool_abuse ... ok
+
+test_policy_engine (9)
+  test_custom_rule ... ok
+  test_default_deny ... ok
+  test_default_rules_allow_trusted ... ok
+  test_default_rules_block_critical ... ok
+  test_default_rules_block_tainted_code_exec ... ok
+  test_default_rules_block_tainted_write ... ok
+  test_default_rules_quarantine_high ... ok
+  test_default_rules_quarantine_tainted_email ... ok
+  test_priority_ordering ... ok
+  test_remove_rule ... ok
+
+test_taint_tracker (18)
+  test_combined_untrusted_labels ... ok
+  test_none_is_trusted ... ok
+  test_tool_output_is_untrusted ... ok
+  test_user_input_combined_with_tool_output_is_untrusted ... ok
+  test_user_input_is_trusted ... ok
+  test_web_content_is_untrusted ... ok
+  test_clear ... ok
+  test_create_tainted ... ok
+  test_create_tainted_rejects_trusted_labels ... ok
+  test_create_trusted ... ok
+  test_get_all_tainted_and_trusted ... ok
+  test_propagate_combines_labels ... ok
+  test_unknown_id_is_tainted_by_default ... ok
+  test_data_id_is_generated ... ok
+  test_tainted_data ... ok
+  test_trusted_data ... ok
+  test_with_additional_label ... ok
+
+=== Lint (ruff check) ===
+All checks passed!
+
+=== Format (ruff format --check) ===
+14 files already formatted
+
+=== Types (ty check) ===
+All checks passed!
