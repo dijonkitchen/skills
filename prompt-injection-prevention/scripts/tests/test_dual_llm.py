@@ -36,8 +36,8 @@ class TestDualLLMOrchestrator(unittest.TestCase):
             source_label=TaintLabel.TOOL_OUTPUT,
         )
         self.assertTrue(result.is_tainted)
-        self.assertIn(TaintLabel.TOOL_OUTPUT, result.labels)
-        self.assertIn(TaintLabel.LLM_GENERATED, result.labels)
+        self.assertTrue(result.labels & TaintLabel.TOOL_OUTPUT)
+        self.assertTrue(result.labels & TaintLabel.LLM_GENERATED)
 
     def test_separate_histories(self):
         orch = DualLLMOrchestrator(privileged_llm=_echo_llm)
