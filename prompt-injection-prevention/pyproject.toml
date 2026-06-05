@@ -22,7 +22,13 @@ classifiers = [
 ]
 
 [dependency-groups]
-dev = ["ruff>=0.4", "ty>=0.0.1a1"]
+dev = ["ruff>=0.4", "pyright>=1.1.408"]
+
+[tool.pyright]
+include = ["scripts"]
+pythonVersion = "3.10"
+typeCheckingMode = "standard"
+reportMissingImports = true
 
 [build-system]
 requires = ["hatchling"]

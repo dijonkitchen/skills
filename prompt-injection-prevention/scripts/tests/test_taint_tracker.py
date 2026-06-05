@@ -45,10 +45,10 @@ class TestTaintedData(unittest.TestCase):
     def test_with_additional_label(self):
         td = TaintedData(value="hello", labels=TaintLabel.TOOL_OUTPUT)
         td2 = td.with_additional_label(TaintLabel.WEB_CONTENT)
-        self.assertIn(TaintLabel.TOOL_OUTPUT, td2.labels)
-        self.assertIn(TaintLabel.WEB_CONTENT, td2.labels)
+        self.assertTrue(td2.labels & TaintLabel.TOOL_OUTPUT)
+        self.assertTrue(td2.labels & TaintLabel.WEB_CONTENT)
         # Original unchanged
-        self.assertNotIn(TaintLabel.WEB_CONTENT, td.labels)
+        self.assertFalse(td.labels & TaintLabel.WEB_CONTENT)
 
     def test_data_id_is_generated(self):
         td1 = TaintedData(value="a")
@@ -84,8 +84,8 @@ class TestTaintTracker(unittest.TestCase):
         b = tracker.create_tainted("web part", TaintLabel.WEB_CONTENT)
         combined = tracker.propagate(a, b, result_value="merged")
         self.assertTrue(combined.is_tainted)
-        self.assertIn(TaintLabel.USER_INPUT, combined.labels)
-        self.assertIn(TaintLabel.WEB_CONTENT, combined.labels)
+        self.assertTrue(combined.labels & TaintLabel.USER_INPUT)
+        self.assertTrue(combined.labels & TaintLabel.WEB_CONTENT)
 
     def test_unknown_id_is_tainted_by_default(self):
         tracker = TaintTracker()
